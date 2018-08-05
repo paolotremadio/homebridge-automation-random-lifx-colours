@@ -1,7 +1,7 @@
 {
   "name": "homebridge-automation-random-lifx-colours",
   "version": "0.0.1",
-  "description": "Pick a random colour from a palette for your Lifx Z light stirp",
+  "description": "Pick a random colour from a palette for your Lifx Z light strip",
   "license": "ISC",
   "keywords": [
     "homebridge-plugin"
