@@ -1,0 +1,36 @@
+{
+  "name": "homebridge-automation-random-lifx-colours",
+  "version": "0.0.1",
+  "description": "Pick a random colour from a palette for your Lifx Z light stirp",
+  "license": "ISC",
+  "keywords": [
+    "homebridge-plugin"
+  ],
+  "author": {
+    "name": "Paolo Tremadio"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/paolotremadio/homebridge-automation-random-lifx-colours.git"
+  },
+  "bugs": {
+    "url": "http://github.com/paolotremadio/homebridge-automation-random-lifx-colours/issues"
+  },
+  "engines": {
+    "node": ">=8.0.0",
+    "homebridge": ">=0.4.0"
+  },
+  "dependencies": {
+    "debug": "^3.1.0",
+    "hap-nodejs": "^0.4.28",
+    "node-lifx-lan": "^0.2.1"
+  },
+  "devDependencies": {
+    "eslint": "^4.16.0",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-plugin-import": "^2.8.0"
+  },
+  "scripts": {
+    "lint": "./node_modules/eslint/bin/eslint.js . --ext .js"
+  }
+}
