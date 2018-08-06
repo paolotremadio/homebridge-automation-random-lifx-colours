@@ -28,7 +28,22 @@ function PaletteAuthor() {
 }
 PaletteAuthor.UUID = PaletteAuthorUUID;
 
+const FadeInModeUUID = '55221e9a-9954-11e8-9eb6-579269fb1459';
+function FadeInMode() {
+  const char = new Characteristic('Fade in', FadeInModeUUID);
+
+  char.setProps({
+    format: Characteristic.Formats.BOOL,
+    perms: [Characteristic.Perms.READ, Characteristic.Perms.WRITE, Characteristic.Perms.NOTIFY],
+  });
+  char.value = char.getDefaultValue();
+
+  return char;
+}
+FadeInMode.UUID = FadeInModeUUID;
+
 module.exports = {
   PaletteName,
   PaletteAuthor,
+  FadeInMode,
 };

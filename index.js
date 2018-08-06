@@ -1,7 +1,8 @@
 const fs = require('fs');
 const debug = require('debug')('automation-random-lifx-colours');
-const CustomCharacteristics = require('./custom-characteristics');
+const pkginfo = require('./package');
 
+const CustomCharacteristics = require('./custom-characteristics');
 const LifxColourPalettes = require('./lifx-colour-palettes');
 
 let Service;
@@ -11,7 +12,7 @@ class AutomationRandomLifxColours {
   constructor(log, config) {
     this.log = log;
 
-    const { light, palettesFile, name } = config;
+    const { light, palettesFile, name, standardMode, fadeInMode } = config;
 
     this.name = name;
 
@@ -25,6 +26,16 @@ class AutomationRandomLifxColours {
       logger: log,
     });
 
+    this.standardModeConfig = {
+      brightness: (standardMode.brightness || 100) / 100,
+      transitionDuration: (standardMode.transitionDuration || 1) * 1000,
+    };
+
+    this.fadeInModeConfig = {
+      brightness: (fadeInMode.brightness || 100) / 100,
+      transitionDuration: (fadeInMode.transitionDuration || 1) * 1000,
+    };
+
     this.createServices();
   }
 
@@ -37,12 +48,25 @@ class AutomationRandomLifxColours {
       .on('set', this.setSwitch.bind(this));
 
     this.switchService
+      .addCharacteristic(CustomCharacteristics.FadeInMode)
+      .on('get', callback => callback(null, false))
+      .on('set', this.setFadeIn.bind(this));
+
+    this.switchService
       .addCharacteristic(CustomCharacteristics.PaletteName)
       .on('get', callback => callback(null, this.currentPaletteName));
 
     this.switchService
       .addCharacteristic(CustomCharacteristics.PaletteAuthor)
       .on('get', callback => callback(null, this.currentPaletteAuthor));
+
+    this.accessoryInformationService = new Service.AccessoryInformation()
+      .setCharacteristic(Characteristic.Name, this.name)
+      .setCharacteristic(Characteristic.Manufacturer, pkginfo.author.name || pkginfo.author)
+      .setCharacteristic(Characteristic.Model, 'LIFX Z')
+      .setCharacteristic(Characteristic.SerialNumber, 'n/a')
+      .setCharacteristic(Characteristic.FirmwareRevision, pkginfo.version)
+      .setCharacteristic(Characteristic.HardwareRevision, pkginfo.version);
   }
 
   refreshValues() {
@@ -56,23 +80,39 @@ class AutomationRandomLifxColours {
   }
 
   getServices() {
-    return [this.switchService];
+    return [
+      this.switchService,
+      this.accessoryInformationService,
+    ];
   }
 
   setSwitch(on, callback) {
     if (on) {
       this
         .setRandomPalette()
-        .then((palette) => {
-          this.currentPaletteName = palette.name;
-          this.currentPaletteAuthor = palette.author;
-
-          this.refreshValues();
-
+        .then(() => {
           // Turn off the switch after one second
           setTimeout(() => {
             this.switchService
               .setCharacteristic(Characteristic.On, false);
+          }, 1000);
+
+          callback();
+        });
+    } else {
+      callback();
+    }
+  }
+
+  setFadeIn(on, callback) {
+    if (on) {
+      this
+        .setRandomPalette(true)
+        .then(() => {
+          // Turn off the switch after one second
+          setTimeout(() => {
+            this.switchService
+              .setCharacteristic(CustomCharacteristics.FadeInMode, false);
           }, 1000);
 
           callback();
@@ -95,16 +135,21 @@ class AutomationRandomLifxColours {
     return palettes[Math.floor(Math.random() * palettes.length)];
   }
 
-  async setRandomPalette() {
+  async setRandomPalette(fadeInMode = false) {
     const paletteConfig = this.pickRandomPalette();
+
+    const { brightness, transitionDuration } = this[fadeInMode ? 'fadeInModeConfig' : 'standardModeConfig'];
 
     const paletteName = paletteConfig.name;
     const paletteAuthor = paletteConfig.author.name || 'unknown';
 
     this.log(`Applying palette "${paletteName}" by ${paletteAuthor}`);
-    await this.lifxColourPalettes.applyPaletteToLight(paletteConfig.palette, 0.5);
+    await this.lifxColourPalettes.applyPaletteToLight(paletteConfig.palette, brightness, transitionDuration);
 
-    return { name: paletteName, author: paletteAuthor };
+    this.currentPaletteName = paletteName;
+    this.currentPaletteAuthor = paletteAuthor;
+
+    this.refreshValues();
   }
 }
 

@@ -70,7 +70,7 @@ class LifxColourPalettes {
     return bucketObjects;
   }
 
-  async applyPaletteToLight(paletteColoursArray, brightness = 1.0) {
+  async applyPaletteToLight(paletteColoursArray, brightness = 1.0, transitionDuration = 1000) {
     const colourInPalette = paletteColoursArray.length;
 
     const zones = this.calculateZonesPerColour(colourInPalette);
@@ -80,12 +80,6 @@ class LifxColourPalettes {
       await this.detectDevice();
     } catch (e) {
       this.log(`Cannot detect device -- ${e.toString()}`);
-    }
-
-    try {
-      await this.device.turnOn();
-    } catch (e) {
-      this.log(`Cannot turn on device -- ${e.toString()}`);
     }
 
     try {
@@ -104,6 +98,15 @@ class LifxColourPalettes {
       }
     } catch (e) {
       this.log(`Cannot apply palette -- ${e.toString()}`);
+    }
+
+    try {
+      await this.device.lightSetPower({
+        level: 1,
+        duration: transitionDuration,
+      });
+    } catch (e) {
+      this.log(`Cannot turn on device -- ${e.toString()}`);
     }
 
     try {
