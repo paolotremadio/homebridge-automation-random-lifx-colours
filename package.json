@@ -1,7 +1,7 @@
 {
-  "name": "homebridge-automation-random-lifx-colours",
+  "name": "homebridge-automation-lifx-colour-palettes",
   "version": "0.0.1",
-  "description": "Pick a random colour from a palette for your Lifx Z light strip",
+  "description": "Apply colour palettes to your Lifx Z light strip",
   "license": "ISC",
   "keywords": [
     "homebridge-plugin"
@@ -11,10 +11,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/paolotremadio/homebridge-automation-random-lifx-colours.git"
+    "url": "git://github.com/paolotremadio/homebridge-automation-lifx-colour-palettes.git"
   },
   "bugs": {
-    "url": "http://github.com/paolotremadio/homebridge-automation-random-lifx-colours/issues"
+    "url": "http://github.com/paolotremadio/homebridge-automation-lifx-colour-palettes/issues"
   },
   "engines": {
     "node": ">=8.0.0",

@@ -1,5 +1,5 @@
 const fs = require('fs');
-const debug = require('debug')('automation-random-lifx-colours');
+const debug = require('debug')('homebridge-automation-lifx-colour-palettes');
 const pkginfo = require('./package');
 
 const CustomCharacteristics = require('./custom-characteristics');
@@ -8,11 +8,17 @@ const LifxColourPalettes = require('./lifx-colour-palettes');
 let Service;
 let Characteristic;
 
-class AutomationRandomLifxColours {
+class AutomationLifxColourPalettes {
   constructor(log, config) {
     this.log = log;
 
-    const { light, palettesFile, name, standardMode, fadeInMode } = config;
+    const {
+      light,
+      palettesFile,
+      name,
+      standardMode,
+      fadeInMode,
+    } = config;
 
     this.name = name;
 
@@ -138,13 +144,20 @@ class AutomationRandomLifxColours {
   async setRandomPalette(fadeInMode = false) {
     const paletteConfig = this.pickRandomPalette();
 
-    const { brightness, transitionDuration } = this[fadeInMode ? 'fadeInModeConfig' : 'standardModeConfig'];
+    const {
+      brightness,
+      transitionDuration,
+    } = this[fadeInMode ? 'fadeInModeConfig' : 'standardModeConfig'];
 
     const paletteName = paletteConfig.name;
     const paletteAuthor = paletteConfig.author.name || 'unknown';
 
     this.log(`Applying palette "${paletteName}" by ${paletteAuthor}`);
-    await this.lifxColourPalettes.applyPaletteToLight(paletteConfig.palette, brightness, transitionDuration);
+    await this.lifxColourPalettes.applyPaletteToLight(
+      paletteConfig.palette,
+      brightness,
+      transitionDuration,
+    );
 
     this.currentPaletteName = paletteName;
     this.currentPaletteAuthor = paletteAuthor;
@@ -157,5 +170,5 @@ module.exports = (homebridge) => {
   Service = homebridge.hap.Service; // eslint-disable-line
   Characteristic = homebridge.hap.Characteristic; // eslint-disable-line
 
-  homebridge.registerAccessory('homebridge-automation-random-lifx-colours', 'AutomationRandomLifxColours', AutomationRandomLifxColours);
+  homebridge.registerAccessory('homebridge-automation-lifx-colour-palettes', 'AutomationLifxColourPalettes', AutomationLifxColourPalettes);
 };
