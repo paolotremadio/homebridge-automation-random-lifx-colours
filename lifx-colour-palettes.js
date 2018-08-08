@@ -1,8 +1,6 @@
 const Lifx = require('node-lifx-lan');
 const debug = require('debug')('pt-lifx-colour-palettes');
 
-const tempFixCssToHsb = require('./temp-css-to-hsb');
-
 class LifxColourPalettes {
   constructor({ light, logger }) {
     this.log = logger;
@@ -91,7 +89,7 @@ class LifxColourPalettes {
         await this.device.multiZoneSetColorZones({
           start: zone.start,
           end: zone.end,
-          color: { ...tempFixCssToHsb({ css: paletteColoursArray[x] }), brightness },
+          color: { css: paletteColoursArray[x], brightness },
           duration: 500,
           apply: 1,
         });
