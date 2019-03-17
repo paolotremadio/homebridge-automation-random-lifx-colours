@@ -15,6 +15,19 @@ class LifxColourPalettes {
     this.lightSettings = {
       zones: light.zones,
     };
+
+    this.autoDetectDevice();
+    setInterval(() => this.autoDetectDevice(), 10 * 60 * 1000);
+  }
+
+  async autoDetectDevice() {
+    try {
+      debug('Re-discovering devices');
+      await this.destroyDevice();
+      await this.detectDevice();
+    } catch (e) {
+      this.log(`Error in discovering device: ${e}`);
+    }
   }
 
   async detectDevice() {
@@ -105,12 +118,6 @@ class LifxColourPalettes {
       });
     } catch (e) {
       this.log(`Cannot turn on device -- ${e.toString()}`);
-    }
-
-    try {
-      await this.destroyDevice();
-    } catch (e) {
-      this.log(`Cannot destroy device -- ${e.toString()}`);
     }
   }
 }
