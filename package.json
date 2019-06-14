@@ -1,6 +1,6 @@
 {
   "name": "homebridge-automation-lifx-colour-palettes",
-  "version": "0.0.4",
+  "version": "0.1.0",
   "description": "Apply colour palettes to your Lifx Z light strip",
   "license": "ISC",
   "keywords": [
