@@ -93,32 +93,35 @@ class LifxColourPalettes {
       this.log(`Cannot detect device -- ${e.toString()}`);
     }
 
+    const promises = [];
+
+    for (let x = 0; x < colourInPalette; ++x) {
+      const zone = zones[x];
+
+      debug(`  Bucket: ${x} - Start: ${zone.start} - End: ${zone.end} - Color: ${paletteColoursArray[x]}`);
+
+      promises.push(this.device.multiZoneSetColorZones({
+        start: zone.start,
+        end: zone.end,
+        color: { css: paletteColoursArray[x], brightness },
+        duration: 500,
+        apply: 1,
+      }));
+    }
+
+    debug('Turning on the light');
+    promises.push(this.device.lightSetPower({
+      level: 1,
+      duration: transitionDuration,
+    }));
+
     try {
-      for (let x = 0; x < colourInPalette; ++x) {
-        const zone = zones[x];
-
-        debug(`  Bucket: ${x} - Start: ${zone.start} - End: ${zone.end} - Color: ${paletteColoursArray[x]}`);
-
-        await this.device.multiZoneSetColorZones({
-          start: zone.start,
-          end: zone.end,
-          color: { css: paletteColoursArray[x], brightness },
-          duration: 500,
-          apply: 1,
-        });
-      }
+      await Promise.all(promises);
     } catch (e) {
       this.log(`Cannot apply palette -- ${e.toString()}`);
     }
 
-    try {
-      await this.device.lightSetPower({
-        level: 1,
-        duration: transitionDuration,
-      });
-    } catch (e) {
-      this.log(`Cannot turn on device -- ${e.toString()}`);
-    }
+    debug('Done');
   }
 }
 

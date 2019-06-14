@@ -153,7 +153,7 @@ class AutomationLifxColourPalettes {
     const paletteAuthor = paletteConfig.author.name || 'unknown';
 
     this.log(`Applying palette "${paletteName}" by ${paletteAuthor}`);
-    await this.lifxColourPalettes.applyPaletteToLight(
+    this.lifxColourPalettes.applyPaletteToLight(
       paletteConfig.palette,
       brightness,
       transitionDuration,
