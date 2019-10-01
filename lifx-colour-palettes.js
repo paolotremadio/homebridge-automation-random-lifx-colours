@@ -16,18 +16,7 @@ class LifxColourPalettes {
       zones: light.zones,
     };
 
-    this.autoDetectDevice();
-    setInterval(() => this.autoDetectDevice(), 10 * 60 * 1000);
-  }
-
-  async autoDetectDevice() {
-    try {
-      debug('Re-discovering devices');
-      await this.destroyDevice();
-      await this.detectDevice();
-    } catch (e) {
-      this.log(`Error in discovering device: ${e}`);
-    }
+    this.detectDevice();
   }
 
   async detectDevice() {
@@ -37,15 +26,6 @@ class LifxColourPalettes {
       debug('Device detected');
     } else {
       debug('Device already detected');
-    }
-  }
-
-  async destroyDevice() {
-    if (this.device) {
-      debug('Destroying device...');
-      await Lifx.destroy();
-      this.device = null;
-      debug('Device destroyed');
     }
   }
 
@@ -86,12 +66,6 @@ class LifxColourPalettes {
 
     const zones = this.calculateZonesPerColour(colourInPalette);
     debug(`Setting palette over ${colourInPalette} buckets`);
-
-    try {
-      await this.detectDevice();
-    } catch (e) {
-      this.log(`Cannot detect device -- ${e.toString()}`);
-    }
 
     const promises = [];
 
