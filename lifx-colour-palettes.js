@@ -95,6 +95,12 @@ class LifxColourPalettes {
 
     const promises = [];
 
+    debug('Turning on the light');
+    promises.push(this.device.lightSetPower({
+      level: 1,
+      duration: transitionDuration,
+    }));
+
     for (let x = 0; x < colourInPalette; ++x) {
       const zone = zones[x];
 
@@ -108,12 +114,6 @@ class LifxColourPalettes {
         apply: 1,
       }));
     }
-
-    debug('Turning on the light');
-    promises.push(this.device.lightSetPower({
-      level: 1,
-      duration: transitionDuration,
-    }));
 
     try {
       await Promise.all(promises);
