@@ -757,9 +757,10 @@ natural-compare@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/natural-compare/-/natural-compare-1.4.0.tgz#4abebfeed7541f2c27acfb29bdbbd15c8d5ba4f7"
 
-"node-lifx-lan@https://github.com/paolotremadio/node-lifx-lan":
+node-lifx-lan@^0.3.1:
   version "0.3.1"
-  resolved "https://github.com/paolotremadio/node-lifx-lan#5338df10d7b1e18004c6c1ab95978e3a7c40d1ba"
+  resolved "https://registry.yarnpkg.com/node-lifx-lan/-/node-lifx-lan-0.3.1.tgz#11dd1cb8bae11f3ecf9e9b19346838d768e7df46"
+  integrity sha512-1rpu8VsGFwZawVE5JQc1pJWD0slvR1fYbIBgQzGO1vdAjmTeuEYko941mpE7V0/tbTJuahAhWHKSg3dkhb5ZIA==
 
 node-persist@^0.0.11:
   version "0.0.11"
